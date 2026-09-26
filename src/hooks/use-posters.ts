@@ -8,6 +8,7 @@ import {
 
 import {
   createPoster,
+  deletePoster,
   getPoster,
   getPosters,
   regeneratePoster,
@@ -36,9 +37,8 @@ export const useCreatePoster = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (
-      payload: CreatePosterPayload
-    ) => createPoster(payload),
+    mutationFn: (payload: CreatePosterPayload) =>
+      createPoster(payload),
 
     onSuccess: (poster) => {
       queryClient.invalidateQueries({
@@ -61,13 +61,29 @@ export const useRegeneratePoster = () => {
       regeneratePoster(id),
 
     onSuccess: (poster) => {
-      // Update current poster immediately
       queryClient.setQueryData(
         ["posters", poster._id],
         poster
       );
 
-      // Refresh poster list
+      queryClient.invalidateQueries({
+        queryKey: ["posters"],
+      });
+    },
+  });
+};
+
+export const useDeletePoster = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deletePoster(id),
+
+    onSuccess: (_, posterId) => {
+      queryClient.removeQueries({
+        queryKey: ["posters", posterId],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["posters"],
       });

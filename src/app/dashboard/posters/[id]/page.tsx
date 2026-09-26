@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
 import {
   ArrowLeft,
   Download,
   FolderOpen,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 
 import Card from "@/components/ui/card";
@@ -14,12 +16,14 @@ import Button from "@/components/ui/button";
 import GenerationLoader from "@/components/poster/generation-loader";
 
 import {
+  useDeletePoster,
   usePoster,
   useRegeneratePoster,
 } from "@/hooks/use-posters";
 
 export default function PosterDetailsPage() {
   const params = useParams();
+  const router = useRouter();
 
   const posterId =
     typeof params.id === "string" ? params.id : "";
@@ -33,6 +37,7 @@ export default function PosterDetailsPage() {
   } = usePoster(posterId);
 
   const regenerateMutation = useRegeneratePoster();
+  const deleteMutation = useDeletePoster();
 
   const handleRegenerate = async () => {
     if (!poster || poster.generationCount >= 3) {
@@ -44,6 +49,31 @@ export default function PosterDetailsPage() {
     } catch (error) {
       console.error(
         "Poster regeneration failed:",
+        error
+      );
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!poster || deleteMutation.isPending) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this poster? This action cannot be undone."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteMutation.mutateAsync(poster._id);
+
+      router.push("/dashboard/posters");
+    } catch (error) {
+      console.error(
+        "Poster deletion failed:",
         error
       );
     }
@@ -64,7 +94,8 @@ export default function PosterDetailsPage() {
       }
 
       const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
+      const blobUrl =
+        window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
 
@@ -92,7 +123,9 @@ export default function PosterDetailsPage() {
 
   /* Loading */
   if (isLoading) {
-    return <GenerationLoader message="Loading your poster..." />;
+    return (
+      <GenerationLoader message="Loading your poster..." />
+    );
   }
 
   /* Error */
@@ -145,7 +178,8 @@ export default function PosterDetailsPage() {
 
   const canRegenerate =
     poster.generationCount < 3 &&
-    !regenerateMutation.isPending;
+    !regenerateMutation.isPending &&
+    !deleteMutation.isPending;
 
   const generationsRemaining = Math.max(
     3 - poster.generationCount,
@@ -187,12 +221,13 @@ export default function PosterDetailsPage() {
             </div>
 
             {/* Actions */}
-            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:gap-3">
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:gap-3">
               {poster.generatedImageUrl &&
                 poster.status === "COMPLETED" && (
                   <Button
                     variant="outline"
                     onClick={handleDownload}
+                    disabled={deleteMutation.isPending}
                     className="w-full"
                   >
                     <Download className="h-4 w-4" />
@@ -220,6 +255,20 @@ export default function PosterDetailsPage() {
                 {poster.generationCount >= 3
                   ? "Limit Reached"
                   : "Regenerate"}
+              </Button>
+
+              <Button
+                variant="danger"
+                onClick={handleDelete}
+                loading={deleteMutation.isPending}
+                disabled={deleteMutation.isPending}
+                className="col-span-2 w-full sm:col-span-1"
+              >
+                {!deleteMutation.isPending && (
+                  <Trash2 className="h-4 w-4" />
+                )}
+
+                Delete
               </Button>
             </div>
           </div>

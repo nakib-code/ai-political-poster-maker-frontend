@@ -40,8 +40,7 @@ export default function TemplatesPage() {
               </h1>
 
               <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-                Select a design and start creating your
-                poster.
+                Select a design and start creating your poster.
               </p>
             </div>
 
@@ -52,19 +51,19 @@ export default function TemplatesPage() {
                 className="w-full sm:w-auto"
               >
                 <RefreshCw className="h-4 w-4" />
-                Try again
+                Try Again
               </Button>
             )}
           </div>
         </section>
 
-        {/* Content */}
-        {isLoading ? (
+        {/* Loading */}
+        {isLoading && (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70"
+                className="card overflow-hidden"
               >
                 <div className="aspect-[4/5] animate-pulse bg-white/[0.04]" />
 
@@ -78,9 +77,12 @@ export default function TemplatesPage() {
               </div>
             ))}
           </div>
-        ) : isError ? (
+        )}
+
+        {/* Error */}
+        {!isLoading && isError && (
           <div className="flex min-h-[45vh] items-center justify-center">
-            <div className="w-full max-w-md rounded-2xl border border-red-500/10 bg-red-500/[0.03] p-8 text-center sm:p-10">
+            <div className="card w-full max-w-md p-8 text-center sm:p-10">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10">
                 <LayoutTemplate className="h-7 w-7 text-red-400" />
               </div>
@@ -91,8 +93,7 @@ export default function TemplatesPage() {
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
                 We couldn't load the template library.
-                Please check your connection and try
-                again.
+                Please check your connection and try again.
               </p>
 
               <Button
@@ -101,30 +102,40 @@ export default function TemplatesPage() {
                 className="mt-6"
               >
                 <RefreshCw className="h-4 w-4" />
-                Try again
+                Try Again
               </Button>
             </div>
           </div>
-        ) : templates.length === 0 ? (
-          <div className="flex min-h-[45vh] items-center justify-center">
-            <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center sm:p-10">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
-                <LayoutTemplate className="h-7 w-7 text-emerald-400" />
-              </div>
-
-              <h2 className="mt-5 text-lg font-bold text-white">
-                No templates available
-              </h2>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                There are currently no active templates
-                available for creating posters.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <TemplateGrid templates={templates} />
         )}
+
+        {/* Empty */}
+        {!isLoading &&
+          !isError &&
+          templates.length === 0 && (
+            <div className="flex min-h-[45vh] items-center justify-center">
+              <div className="card w-full max-w-md p-8 text-center sm:p-10">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
+                  <LayoutTemplate className="h-7 w-7 text-emerald-400" />
+                </div>
+
+                <h2 className="mt-5 text-lg font-bold text-white">
+                  No templates available
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  There are currently no active templates
+                  available for creating posters.
+                </p>
+              </div>
+            </div>
+          )}
+
+        {/* Templates */}
+        {!isLoading &&
+          !isError &&
+          templates.length > 0 && (
+            <TemplateGrid templates={templates} />
+          )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+
 import {
   FolderOpen,
   Plus,
@@ -21,7 +22,6 @@ export default function MyPostersPage() {
     refetch,
   } = usePosters();
 
-  /* Loading */
   if (isLoading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">

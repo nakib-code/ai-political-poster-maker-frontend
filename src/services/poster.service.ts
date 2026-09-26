@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+
 import type {
   CreatePosterPayload,
   Poster,
@@ -45,4 +46,10 @@ export const regeneratePoster = async (
     );
 
   return response.data.data;
+};
+
+export const deletePoster = async (
+  id: string
+): Promise<void> => {
+  await api.delete(`/posters/${id}`);
 };
