@@ -5,10 +5,10 @@ import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   Download,
+  FolderOpen,
   RefreshCw,
 } from "lucide-react";
 
-import DashboardShell from "@/components/layout/dashboard-shell";
 import Card from "@/components/ui/card";
 import Button from "@/components/ui/button";
 import GenerationLoader from "@/components/poster/generation-loader";
@@ -22,9 +22,7 @@ export default function PosterDetailsPage() {
   const params = useParams();
 
   const posterId =
-    typeof params.id === "string"
-      ? params.id
-      : "";
+    typeof params.id === "string" ? params.id : "";
 
   const {
     data: poster,
@@ -96,7 +94,7 @@ export default function PosterDetailsPage() {
         error
       );
 
-      // Fallback: open image in a new tab
+      // Fallback
       window.open(
         poster.generatedImageUrl,
         "_blank",
@@ -105,56 +103,66 @@ export default function PosterDetailsPage() {
     }
   };
 
+  /* --------------------------------
+     Loading
+  -------------------------------- */
+
   if (isLoading) {
     return (
-      <DashboardShell>
-        <GenerationLoader
-          message="Loading your poster..."
-        />
-      </DashboardShell>
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
+        <GenerationLoader message="Loading your poster..." />
+      </div>
     );
   }
 
+  /* --------------------------------
+     Error
+  -------------------------------- */
+
   if (isError || !poster) {
     return (
-      <DashboardShell>
-        <div className="mx-auto max-w-xl">
-          <Card className="p-10 text-center">
-            <h1 className="text-xl font-bold text-white">
-              Poster not found
-            </h1>
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8">
+        <Card className="w-full max-w-md p-8 text-center sm:p-10">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10">
+            <FolderOpen className="h-7 w-7 text-red-400" />
+          </div>
 
-            <p className="mt-2 text-sm leading-6 text-slate-500">
-              We could not load this poster. It may
-              have been removed or the link may be
-              invalid.
+          <h1 className="mt-5 text-xl font-bold text-white">
+            Poster not found
+          </h1>
+
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            We could not load this poster. It may have
+            been removed or the link may be invalid.
+          </p>
+
+          {error instanceof Error && (
+            <p className="mt-3 break-words text-xs text-red-400">
+              {error.message}
             </p>
+          )}
 
-            {error instanceof Error && (
-              <p className="mt-3 text-xs text-red-400">
-                {error.message}
-              </p>
-            )}
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Button
+              variant="secondary"
+              onClick={() => refetch()}
+              className="w-full sm:w-auto"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Try Again
+            </Button>
 
-            <div className="mt-6 flex justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => refetch()}
-                className="btn btn-secondary"
-              >
-                Try Again
-              </button>
-
-              <Link
-                href="/dashboard/posters"
-                className="btn btn-primary"
-              >
+            <Link
+              href="/dashboard/posters"
+              className="w-full sm:w-auto"
+            >
+              <Button className="w-full">
                 My Posters
-              </Link>
-            </div>
-          </Card>
-        </div>
-      </DashboardShell>
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </div>
     );
   }
 
@@ -163,39 +171,50 @@ export default function PosterDetailsPage() {
     !regenerateMutation.isPending;
 
   return (
-    <DashboardShell>
-      <div className="mx-auto max-w-6xl">
+    <div className="min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         {/* Header */}
-        <div className="mb-6">
+        <section className="mb-6">
           <Link
             href="/dashboard/posters"
-            className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-white"
+            className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to My Posters
           </Link>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="page-title">
+              <p className="mb-2 text-sm font-semibold text-emerald-400">
                 Poster Preview
+              </p>
+
+              <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+                Your generated poster
               </h1>
 
-              <p className="page-description">
-                Review your generated poster and
-                manage your generations.
+              <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
+                Review your poster, download it, or
+                generate another version.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            {/* Actions */}
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:gap-3">
               {poster.generatedImageUrl &&
                 poster.status === "COMPLETED" && (
                   <Button
                     variant="outline"
                     onClick={handleDownload}
+                    className="w-full"
                   >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download PNG
+                    <Download className="h-4 w-4" />
+                    <span className="hidden xs:inline">
+                      Download
+                    </span>
+                    <span className="xs:hidden">
+                      PNG
+                    </span>
                   </Button>
                 )}
 
@@ -206,9 +225,10 @@ export default function PosterDetailsPage() {
                   regenerateMutation.isPending
                 }
                 disabled={!canRegenerate}
+                className="w-full"
               >
                 {!regenerateMutation.isPending && (
-                  <RefreshCw className="mr-2 h-4 w-4" />
+                  <RefreshCw className="h-4 w-4" />
                 )}
 
                 {poster.generationCount >= 3
@@ -217,38 +237,36 @@ export default function PosterDetailsPage() {
               </Button>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Main content */}
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        {/* Main */}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
           {/* Preview */}
-          <Card className="overflow-hidden p-3 sm:p-5">
+          <Card className="overflow-hidden p-2 sm:p-4">
             {poster.status === "GENERATING" && (
               <GenerationLoader />
             )}
 
             {poster.status === "FAILED" && (
-              <div className="flex min-h-[500px] items-center justify-center px-6">
+              <div className="flex min-h-[500px] items-center justify-center px-5 py-10 sm:px-8">
                 <div className="max-w-sm text-center">
-                  <div className="badge badge-danger">
+                  <span className="badge badge-danger">
                     Generation failed
-                  </div>
+                  </span>
 
                   <h2 className="mt-4 text-lg font-bold text-white">
-                    We couldn&apos;t generate your
-                    poster
+                    We couldn't generate your poster
                   </h2>
 
                   <p className="mt-2 text-sm leading-6 text-slate-500">
-                    Something went wrong while
-                    generating this poster. You can
-                    try again if you still have
-                    generations available.
+                    Something went wrong while generating
+                    this poster. You can try again if you
+                    still have generations available.
                   </p>
 
                   <Button
                     variant="primary"
-                    className="mt-5"
+                    className="mt-6"
                     onClick={handleRegenerate}
                     loading={
                       regenerateMutation.isPending
@@ -256,10 +274,12 @@ export default function PosterDetailsPage() {
                     disabled={!canRegenerate}
                   >
                     {!regenerateMutation.isPending && (
-                      <RefreshCw className="mr-2 h-4 w-4" />
+                      <RefreshCw className="h-4 w-4" />
                     )}
 
-                    Try Again
+                    {poster.generationCount >= 3
+                      ? "Limit Reached"
+                      : "Try Again"}
                   </Button>
                 </div>
               </div>
@@ -267,26 +287,26 @@ export default function PosterDetailsPage() {
 
             {poster.status === "COMPLETED" &&
               poster.generatedImageUrl && (
-                <div className="flex justify-center">
+                <div className="flex justify-center rounded-xl bg-slate-950 p-1 sm:p-2">
                   <img
                     src={poster.generatedImageUrl}
                     alt={`Generated poster for ${poster.name}`}
-                    className="h-auto w-full max-w-[720px] rounded-xl object-contain shadow-2xl"
+                    className="h-auto w-full max-w-[720px] rounded-lg object-contain shadow-2xl"
                   />
                 </div>
               )}
 
             {poster.status === "COMPLETED" &&
               !poster.generatedImageUrl && (
-                <div className="flex min-h-[500px] items-center justify-center">
+                <div className="flex min-h-[500px] items-center justify-center px-6">
                   <div className="text-center">
                     <h2 className="text-lg font-bold text-white">
                       Poster image unavailable
                     </h2>
 
-                    <p className="mt-2 text-sm text-slate-500">
-                      The poster was generated but the
-                      image URL is unavailable.
+                    <p className="mt-2 text-sm leading-6 text-slate-500">
+                      The poster was generated but the image
+                      URL is unavailable.
                     </p>
                   </div>
                 </div>
@@ -295,7 +315,7 @@ export default function PosterDetailsPage() {
 
           {/* Sidebar */}
           <div className="space-y-5">
-            {/* Poster details */}
+            {/* Poster Details */}
             <Card className="p-5">
               <h2 className="text-lg font-bold text-white">
                 Poster Details
@@ -339,22 +359,31 @@ export default function PosterDetailsPage() {
                       Location
                     </p>
 
-                    <div className="mt-1 space-y-1 text-sm text-slate-300">
+                    <div className="mt-2 space-y-1.5 text-sm text-slate-300">
                       {poster.union && (
-                        <p>
-                          Union: {poster.union}
+                        <p className="break-words">
+                          <span className="text-slate-500">
+                            Union:
+                          </span>{" "}
+                          {poster.union}
                         </p>
                       )}
 
                       {poster.thana && (
-                        <p>
-                          Thana: {poster.thana}
+                        <p className="break-words">
+                          <span className="text-slate-500">
+                            Thana:
+                          </span>{" "}
+                          {poster.thana}
                         </p>
                       )}
 
                       {poster.district && (
-                        <p>
-                          District: {poster.district}
+                        <p className="break-words">
+                          <span className="text-slate-500">
+                            District:
+                          </span>{" "}
+                          {poster.district}
                         </p>
                       )}
                     </div>
@@ -363,19 +392,19 @@ export default function PosterDetailsPage() {
               </div>
             </Card>
 
-            {/* Generation info */}
+            {/* Generation */}
             <Card className="p-5">
               <h2 className="text-lg font-bold text-white">
                 Generation
               </h2>
 
               <div className="mt-5">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-4">
                   <span className="text-sm text-slate-500">
                     Generations used
                   </span>
 
-                  <span className="font-bold text-white">
+                  <span className="shrink-0 font-bold text-white">
                     {poster.generationCount} / 3
                   </span>
                 </div>
@@ -393,7 +422,7 @@ export default function PosterDetailsPage() {
                   />
                 </div>
 
-                <div className="mt-3 flex items-center justify-between text-xs">
+                <div className="mt-3 flex items-center justify-between gap-3 text-xs">
                   <span className="text-slate-600">
                     Maximum 3 generations
                   </span>
@@ -401,8 +430,8 @@ export default function PosterDetailsPage() {
                   <span
                     className={
                       poster.generationCount >= 3
-                        ? "font-semibold text-amber-400"
-                        : "text-slate-500"
+                        ? "shrink-0 font-semibold text-amber-400"
+                        : "shrink-0 text-slate-500"
                     }
                   >
                     {Math.max(
@@ -417,7 +446,7 @@ export default function PosterDetailsPage() {
 
             {/* Status */}
             <Card className="p-5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-bold text-white">
                   Status
                 </h2>
@@ -441,7 +470,7 @@ export default function PosterDetailsPage() {
                 )}
               </div>
 
-              <p className="mt-3 text-xs text-slate-600">
+              <p className="mt-3 break-words text-xs text-slate-600">
                 Created{" "}
                 {new Date(
                   poster.createdAt
@@ -451,7 +480,7 @@ export default function PosterDetailsPage() {
           </div>
         </div>
       </div>
-    </DashboardShell>
+    </div>
   );
 }
 
@@ -470,7 +499,7 @@ function DetailItem({
         {label}
       </p>
 
-      <p className="mt-1 break-words text-sm text-slate-300">
+      <p className="mt-1 break-words text-sm leading-6 text-slate-300">
         {value}
       </p>
     </div>

@@ -1,17 +1,16 @@
 "use client";
 
-import { RefreshCw, LayoutTemplate } from "lucide-react";
+import {
+  LayoutTemplate,
+  RefreshCw,
+} from "lucide-react";
 
-import DashboardShell from "@/components/layout/dashboard-shell";
 import TemplateGrid from "@/components/templates/template-grid";
 import Button from "@/components/ui/button";
 
-import { useAuth } from "@/hooks/use-auth";
 import { useTemplates } from "@/hooks/use-templates";
 
 export default function TemplatesPage() {
-  const { data: user } = useAuth();
-
   const {
     data: templates = [],
     isLoading,
@@ -20,71 +19,113 @@ export default function TemplatesPage() {
   } = useTemplates();
 
   return (
-    <DashboardShell userName={user?.name}>
-      {/* Header */}
-      <section className="page-header">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="mb-2 flex items-center gap-2 text-emerald-400">
-              <LayoutTemplate className="h-5 w-5" />
+    <div className="min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        {/* Header */}
+        <section className="mb-8">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10">
+                  <LayoutTemplate className="h-4 w-4 text-emerald-400" />
+                </div>
 
-              <span className="text-sm font-semibold">
-                Template Library
-              </span>
-            </div>
-
-            <h1 className="page-title">
-              Choose a template
-            </h1>
-
-            <p className="page-description">
-              Select a design and start creating your poster.
-            </p>
-          </div>
-
-          {isError && (
-            <Button
-              variant="outline"
-              onClick={() => refetch()}
-            >
-              <RefreshCw className="h-4 w-4" />
-              Try again
-            </Button>
-          )}
-        </div>
-      </section>
-
-      {/* Loading */}
-      {isLoading ? (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((item) => (
-            <div
-              key={item}
-              className="overflow-hidden rounded-xl border border-white/10 bg-slate-900"
-            >
-              <div className="aspect-[4/5] animate-pulse bg-slate-800" />
-
-              <div className="space-y-3 p-4">
-                <div className="h-5 w-2/3 animate-pulse rounded bg-slate-800" />
-
-                <div className="h-4 w-1/2 animate-pulse rounded bg-slate-800" />
+                <span className="text-sm font-semibold text-emerald-400">
+                  Template Library
+                </span>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : isError ? (
-        <div className="card p-10 text-center">
-          <h3 className="text-lg font-bold">
-            Failed to load templates
-          </h3>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Make sure the backend server is running.
-          </p>
-        </div>
-      ) : (
-        <TemplateGrid templates={templates} />
-      )}
-    </DashboardShell>
+              <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+                Choose a template
+              </h1>
+
+              <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
+                Select a design and start creating your
+                poster.
+              </p>
+            </div>
+
+            {isError && (
+              <Button
+                variant="outline"
+                onClick={() => refetch()}
+                className="w-full sm:w-auto"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Try again
+              </Button>
+            )}
+          </div>
+        </section>
+
+        {/* Content */}
+        {isLoading ? (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70"
+              >
+                <div className="aspect-[4/5] animate-pulse bg-white/[0.04]" />
+
+                <div className="space-y-3 p-5">
+                  <div className="h-5 w-2/3 animate-pulse rounded-lg bg-white/[0.06]" />
+
+                  <div className="h-4 w-1/2 animate-pulse rounded-lg bg-white/[0.04]" />
+
+                  <div className="h-10 w-full animate-pulse rounded-xl bg-white/[0.04]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="flex min-h-[45vh] items-center justify-center">
+            <div className="w-full max-w-md rounded-2xl border border-red-500/10 bg-red-500/[0.03] p-8 text-center sm:p-10">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10">
+                <LayoutTemplate className="h-7 w-7 text-red-400" />
+              </div>
+
+              <h2 className="mt-5 text-lg font-bold text-white">
+                Failed to load templates
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                We couldn't load the template library.
+                Please check your connection and try
+                again.
+              </p>
+
+              <Button
+                variant="outline"
+                onClick={() => refetch()}
+                className="mt-6"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Try again
+              </Button>
+            </div>
+          </div>
+        ) : templates.length === 0 ? (
+          <div className="flex min-h-[45vh] items-center justify-center">
+            <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center sm:p-10">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
+                <LayoutTemplate className="h-7 w-7 text-emerald-400" />
+              </div>
+
+              <h2 className="mt-5 text-lg font-bold text-white">
+                No templates available
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                There are currently no active templates
+                available for creating posters.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <TemplateGrid templates={templates} />
+        )}
+      </div>
+    </div>
   );
 }
