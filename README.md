@@ -520,6 +520,3 @@ Full Stack Developer
 
 ---
 
-## 📄 License
-
-This project was created for educational and portfolio purposes.
