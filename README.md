@@ -136,13 +136,11 @@ npm install
 
 ## 🔐 Environment Variables
 
-Create a `.env.local` file in the frontend root:
+Create a `.env.local` file in the frontend root to connect to your live backend API:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5001/api
+NEXT_PUBLIC_API_URL=https://ai-political-poster-maker-backend.vercel.app/api
 ```
-
-Make sure the backend API is running on the configured port.
 
 ---
 
@@ -389,7 +387,7 @@ NEXT_PUBLIC_API_URL
 Example:
 
 ```text
-http://localhost:5001/api
+https://ai-political-poster-maker-backend.vercel.app/api
 ```
 
 Main API resources:
@@ -467,18 +465,16 @@ The frontend:
 
 ## 🧩 Backend
 
-This frontend requires the corresponding backend API to be running.
-
-Expected backend URL during development:
+This frontend connects to the deployed backend API:
 
 ```text
-http://localhost:5001
+https://ai-political-poster-maker-backend.vercel.app
 ```
 
-Configure it through:
+Configure it through your `.env.local`:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5001/api
+NEXT_PUBLIC_API_URL=https://ai-political-poster-maker-backend.vercel.app/api
 ```
 
 ---
