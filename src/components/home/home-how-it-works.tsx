@@ -21,11 +21,8 @@ const steps = [
 
 export default function HomeHowItWorks() {
   return (
-    <section
-      id="how-it-works"
-      className="border-t border-white/5"
-    >
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="border-t border-white/5">
+      <div className="py-20">
         <div className="text-center">
           <p className="text-sm font-bold uppercase tracking-widest text-emerald-400">
             How It Works
@@ -38,10 +35,7 @@ export default function HomeHowItWorks() {
 
         <div className="relative mt-14 grid gap-8 md:grid-cols-3">
           {steps.map((step, index) => (
-            <div
-              key={step.number}
-              className="relative text-center"
-            >
+            <div key={step.number} className="relative text-center">
               {index < steps.length - 1 && (
                 <div className="absolute left-[calc(50%+60px)] right-[calc(-50%+60px)] top-7 hidden h-px bg-gradient-to-r from-emerald-500/30 to-transparent md:block" />
               )}

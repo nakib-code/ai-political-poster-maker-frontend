@@ -32,22 +32,15 @@ export default function PosterDetailsPage() {
     refetch,
   } = usePoster(posterId);
 
-  const regenerateMutation =
-    useRegeneratePoster();
+  const regenerateMutation = useRegeneratePoster();
 
   const handleRegenerate = async () => {
-    if (!poster) {
-      return;
-    }
-
-    if (poster.generationCount >= 3) {
+    if (!poster || poster.generationCount >= 3) {
       return;
     }
 
     try {
-      await regenerateMutation.mutateAsync(
-        poster._id
-      );
+      await regenerateMutation.mutateAsync(poster._id);
     } catch (error) {
       console.error(
         "Poster regeneration failed:",
@@ -67,18 +60,13 @@ export default function PosterDetailsPage() {
       );
 
       if (!response.ok) {
-        throw new Error(
-          "Failed to download poster"
-        );
+        throw new Error("Failed to download poster");
       }
 
       const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
 
-      const blobUrl =
-        window.URL.createObjectURL(blob);
-
-      const link =
-        document.createElement("a");
+      const link = document.createElement("a");
 
       link.href = blobUrl;
       link.download = `poster-${poster._id}.png`;
@@ -94,7 +82,6 @@ export default function PosterDetailsPage() {
         error
       );
 
-      // Fallback
       window.open(
         poster.generatedImageUrl,
         "_blank",
@@ -103,22 +90,12 @@ export default function PosterDetailsPage() {
     }
   };
 
-  /* --------------------------------
-     Loading
-  -------------------------------- */
-
+  /* Loading */
   if (isLoading) {
-    return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-        <GenerationLoader message="Loading your poster..." />
-      </div>
-    );
+    return <GenerationLoader message="Loading your poster..." />;
   }
 
-  /* --------------------------------
-     Error
-  -------------------------------- */
-
+  /* Error */
   if (isError || !poster) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8">
@@ -132,8 +109,8 @@ export default function PosterDetailsPage() {
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            We could not load this poster. It may have
-            been removed or the link may be invalid.
+            We could not load this poster. It may have been
+            removed or the link may be invalid.
           </p>
 
           {error instanceof Error && (
@@ -170,6 +147,16 @@ export default function PosterDetailsPage() {
     poster.generationCount < 3 &&
     !regenerateMutation.isPending;
 
+  const generationsRemaining = Math.max(
+    3 - poster.generationCount,
+    0
+  );
+
+  const generationProgress = Math.min(
+    (poster.generationCount / 3) * 100,
+    100
+  );
+
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -194,8 +181,8 @@ export default function PosterDetailsPage() {
               </h1>
 
               <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-                Review your poster, download it, or
-                generate another version.
+                Review your poster, download it, or generate
+                another version.
               </p>
             </div>
 
@@ -209,21 +196,20 @@ export default function PosterDetailsPage() {
                     className="w-full"
                   >
                     <Download className="h-4 w-4" />
-                    <span className="hidden xs:inline">
+
+                    <span className="hidden sm:inline">
                       Download
                     </span>
-                    <span className="xs:hidden">
+
+                    <span className="sm:hidden">
                       PNG
                     </span>
                   </Button>
                 )}
 
               <Button
-                variant="primary"
                 onClick={handleRegenerate}
-                loading={
-                  regenerateMutation.isPending
-                }
+                loading={regenerateMutation.isPending}
                 disabled={!canRegenerate}
                 className="w-full"
               >
@@ -259,18 +245,15 @@ export default function PosterDetailsPage() {
                   </h2>
 
                   <p className="mt-2 text-sm leading-6 text-slate-500">
-                    Something went wrong while generating
-                    this poster. You can try again if you
-                    still have generations available.
+                    Something went wrong while generating this
+                    poster. You can try again if you still have
+                    generations available.
                   </p>
 
                   <Button
-                    variant="primary"
                     className="mt-6"
                     onClick={handleRegenerate}
-                    loading={
-                      regenerateMutation.isPending
-                    }
+                    loading={regenerateMutation.isPending}
                     disabled={!canRegenerate}
                   >
                     {!regenerateMutation.isPending && (
@@ -305,8 +288,8 @@ export default function PosterDetailsPage() {
                     </h2>
 
                     <p className="mt-2 text-sm leading-6 text-slate-500">
-                      The poster was generated but the image
-                      URL is unavailable.
+                      The poster was generated but the image URL
+                      is unavailable.
                     </p>
                   </div>
                 </div>
@@ -413,11 +396,7 @@ export default function PosterDetailsPage() {
                   <div
                     className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                     style={{
-                      width: `${Math.min(
-                        (poster.generationCount / 3) *
-                          100,
-                        100
-                      )}%`,
+                      width: `${generationProgress}%`,
                     }}
                   />
                 </div>
@@ -434,11 +413,7 @@ export default function PosterDetailsPage() {
                         : "shrink-0 text-slate-500"
                     }
                   >
-                    {Math.max(
-                      3 - poster.generationCount,
-                      0
-                    )}{" "}
-                    remaining
+                    {generationsRemaining} remaining
                   </span>
                 </div>
               </div>

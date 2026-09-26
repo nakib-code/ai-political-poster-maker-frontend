@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   FolderOpen,
-  Loader2,
   Plus,
   RefreshCw,
 } from "lucide-react";
@@ -22,17 +21,12 @@ export default function MyPostersPage() {
     refetch,
   } = usePosters();
 
-  /* -----------------------------
-     Loading
-  ----------------------------- */
-
+  /* Loading */
   if (isLoading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
         <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/10 bg-emerald-500/5">
-            <Loader2 className="h-6 w-6 animate-spin text-emerald-400" />
-          </div>
+          <span className="spinner mx-auto block h-7 w-7" />
 
           <p className="mt-4 text-sm font-medium text-slate-500">
             Loading your posters...
@@ -64,8 +58,7 @@ export default function MyPostersPage() {
               </h1>
 
               <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-                View, manage, and download all your
-                generated posters.
+                View, manage, and download all your generated posters.
               </p>
             </div>
 
@@ -97,8 +90,8 @@ export default function MyPostersPage() {
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Something went wrong while loading your
-                posters. Please try again.
+                Something went wrong while loading your posters.
+                Please try again.
               </p>
 
               <Button
@@ -126,9 +119,9 @@ export default function MyPostersPage() {
               </h2>
 
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                Your generated posters will appear here.
-                Create your first poster by choosing a
-                template and adding your information.
+                Your generated posters will appear here. Create your
+                first poster by choosing a template and adding your
+                information.
               </p>
 
               <Link
@@ -147,24 +140,17 @@ export default function MyPostersPage() {
         {/* Posters */}
         {!isError && posters.length > 0 && (
           <section>
-            {/* Result count */}
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-slate-300">
-                  Your posters
-                </p>
+            <div className="mb-5">
+              <p className="text-sm font-semibold text-slate-300">
+                Your posters
+              </p>
 
-                <p className="mt-0.5 text-xs text-slate-600">
-                  {posters.length}{" "}
-                  {posters.length === 1
-                    ? "poster"
-                    : "posters"}{" "}
-                  created
-                </p>
-              </div>
+              <p className="mt-0.5 text-xs text-slate-600">
+                {posters.length}{" "}
+                {posters.length === 1 ? "poster" : "posters"} created
+              </p>
             </div>
 
-            {/* Grid */}
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {posters.map((poster) => (
                 <PosterCard

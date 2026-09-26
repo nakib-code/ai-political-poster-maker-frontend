@@ -11,12 +11,16 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <HomeNavbar />
-      <HomeHero />
-      <HomeWorkflow />
-      <HomeFeatures />
-      <HomeHowItWorks />
-      <HomeTemplates />
-      <HomeCTA />
+
+      <div className="page-container">
+        <HomeHero />
+        <HomeWorkflow />
+        <HomeFeatures />
+        <HomeHowItWorks />
+        <HomeTemplates />
+        <HomeCTA />
+      </div>
+
       <HomeFooter />
     </main>
   );

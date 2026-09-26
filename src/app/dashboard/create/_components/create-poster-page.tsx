@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   ArrowRight,
   LayoutTemplate,
-  Loader2,
 } from "lucide-react";
 
 import Card from "@/components/ui/card";
@@ -15,7 +14,6 @@ import PosterForm from "@/components/poster/poster-form";
 
 import { useTemplates } from "@/hooks/use-templates";
 import { useCreatePoster } from "@/hooks/use-posters";
-
 import { uploadImages } from "@/services/upload.service";
 
 import type { CreatePosterPayload } from "@/types/poster";
@@ -45,41 +43,27 @@ export default function CreatePosterPage() {
     try {
       let photoUrls: string[] = [];
 
-      // Upload images first
       if (files.length > 0) {
         photoUrls = await uploadImages(files);
       }
 
-      // Create poster
-      const poster =
-        await createPosterMutation.mutateAsync({
-          ...payload,
-          photoUrls,
-        });
+      const poster = await createPosterMutation.mutateAsync({
+        ...payload,
+        photoUrls,
+      });
 
-      // Open generated poster
-      router.push(
-        `/dashboard/posters/${poster._id}`
-      );
+      router.push(`/dashboard/posters/${poster._id}`);
     } catch (error) {
-      console.error(
-        "Poster generation failed:",
-        error
-      );
+      console.error("Poster generation failed:", error);
     }
   };
 
-  /* -----------------------------
-     Loading
-  ----------------------------- */
-
+  // Loading
   if (templatesLoading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
         <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/10 bg-emerald-500/5">
-            <Loader2 className="h-6 w-6 animate-spin text-emerald-400" />
-          </div>
+          <span className="spinner mx-auto block h-7 w-7" />
 
           <p className="mt-4 text-sm font-medium text-slate-500">
             Loading templates...
@@ -89,10 +73,7 @@ export default function CreatePosterPage() {
     );
   }
 
-  /* -----------------------------
-     Template error
-  ----------------------------- */
-
+  // Template error
   if (templatesError) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8">
@@ -124,10 +105,7 @@ export default function CreatePosterPage() {
     );
   }
 
-  /* -----------------------------
-     No template selected
-  ----------------------------- */
-
+  // No template selected
   if (!templateId || !selectedTemplate) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8">
@@ -145,8 +123,8 @@ export default function CreatePosterPage() {
           </h1>
 
           <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">
-            Select a template first, then add your
-            information and photos to create your poster.
+            Select a template first, then add your information
+            and photos to create your poster.
           </p>
 
           <Link
@@ -163,12 +141,8 @@ export default function CreatePosterPage() {
     );
   }
 
-  /* -----------------------------
-     Create poster
-  ----------------------------- */
-
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+    <div className="flex min-h-[calc(100vh-4rem)] justify-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="mb-6">
@@ -191,12 +165,12 @@ export default function CreatePosterPage() {
               </h1>
 
               <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-                Add your information and photos using
-                the selected template.
+                Add your information and photos using the
+                selected template.
               </p>
             </div>
 
-            {/* Selected template */}
+            {/* Selected Template */}
             <div className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 sm:w-auto sm:min-w-44">
               <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600">
                 Selected Template
@@ -228,9 +202,9 @@ export default function CreatePosterPage() {
         {/* Info */}
         <div className="mt-5 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3">
           <p className="text-center text-xs leading-5 text-slate-600">
-            Your exact text and uploaded photos will be
-            used in the final poster. AI only assists with
-            the visual layout.
+            Your exact text and uploaded photos will be used in
+            the final poster. AI only assists with the visual
+            layout.
           </p>
         </div>
       </div>

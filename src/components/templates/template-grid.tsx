@@ -1,4 +1,7 @@
+import { LayoutTemplate } from "lucide-react";
+
 import TemplateCard from "./template-card";
+
 import type { Template } from "@/types/template";
 
 interface TemplateGridProps {
@@ -10,12 +13,17 @@ export default function TemplateGrid({
 }: TemplateGridProps) {
   if (templates.length === 0) {
     return (
-      <div className="card p-10 text-center">
-        <h3 className="text-lg font-bold">
+      <div className="card flex min-h-[280px] flex-col items-center justify-center p-10 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
+          <LayoutTemplate className="h-6 w-6" />
+        </div>
+
+        <h3 className="mt-4 text-lg font-bold text-white">
           No templates available
         </h3>
 
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
+          There are no poster templates available right now.
           Please check again later.
         </p>
       </div>

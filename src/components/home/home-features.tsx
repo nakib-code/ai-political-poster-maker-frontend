@@ -38,7 +38,7 @@ export default function HomeFeatures() {
       id="features"
       className="border-t border-white/5 bg-slate-950/80"
     >
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="py-20">
         <div className="max-w-2xl">
           <p className="text-sm font-bold uppercase tracking-widest text-emerald-400">
             Features
@@ -49,8 +49,8 @@ export default function HomeFeatures() {
           </h2>
 
           <p className="mt-4 text-sm leading-6 text-slate-500 sm:text-base">
-            A simple workflow designed to help you move
-            from content to finished poster quickly.
+            A simple workflow designed to help you move from content to
+            finished poster quickly.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export default function HomeFeatures() {
             return (
               <div
                 key={feature.title}
-                className="card-hover rounded-2xl border border-white/5 bg-slate-900/60 p-6"
+                className="card card-hover p-6"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/10">
                   <Icon className="h-5 w-5" />

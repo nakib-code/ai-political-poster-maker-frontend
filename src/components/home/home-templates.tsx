@@ -14,7 +14,7 @@ export default function HomeTemplates() {
 
   if (isLoading) {
     return (
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((item) => (
           <div key={item} className="card overflow-hidden">
             <div className="aspect-[4/3] animate-pulse bg-white/[0.04]" />
@@ -31,7 +31,7 @@ export default function HomeTemplates() {
 
   if (isError) {
     return (
-      <div className="card mt-10 p-8 text-center">
+      <div className="card mt-8 p-8 text-center">
         <LayoutTemplate className="mx-auto h-7 w-7 text-slate-600" />
 
         <p className="mt-3 text-sm text-slate-500">
@@ -40,7 +40,7 @@ export default function HomeTemplates() {
 
         <Link
           href="/dashboard/templates"
-          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300"
+          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
         >
           Open Template Library
           <ArrowRight className="h-4 w-4" />
@@ -53,7 +53,7 @@ export default function HomeTemplates() {
 
   if (visibleTemplates.length === 0) {
     return (
-      <div className="card mt-10 p-10 text-center">
+      <div className="card mt-8 p-10 text-center">
         <LayoutTemplate className="mx-auto h-7 w-7 text-slate-600" />
 
         <p className="mt-3 text-sm text-slate-500">
@@ -64,7 +64,10 @@ export default function HomeTemplates() {
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      id="templates"
+      className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+    >
       {visibleTemplates.map((template) => (
         <div
           key={template._id}
@@ -92,8 +95,10 @@ export default function HomeTemplates() {
             </div>
           </div>
 
-          <div className="p-5">
-            <h3 className="font-bold text-white">{template.title}</h3>
+          <div className="flex flex-col p-5">
+            <h3 className="font-bold text-white">
+              {template.title}
+            </h3>
 
             <p className="mt-1 text-xs text-slate-600">
               {template.layoutConfig.photoSlots}{" "}

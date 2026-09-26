@@ -25,8 +25,8 @@ export default function GenerationLoader({
         </h2>
 
         <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">
-          AI is preparing the layout and rendering
-          your poster. This may take a moment.
+          AI is preparing the layout and rendering your poster.
+          This may take a moment.
         </p>
 
         <div className="mx-auto mt-5 flex w-40 items-center gap-1">

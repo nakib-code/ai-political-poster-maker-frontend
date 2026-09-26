@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ImageIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Image as ImageIcon,
+} from "lucide-react";
 
 import Card from "@/components/ui/card";
+
 import TemplateBadge from "./template-badge";
 
 import type { Template } from "@/types/template";
@@ -15,8 +19,10 @@ interface TemplateCardProps {
 export default function TemplateCard({
   template,
 }: TemplateCardProps) {
+  const photoSlots = template.layoutConfig.photoSlots;
+
   return (
-    <Card hover className="group overflow-hidden">
+    <Card className="card-hover group overflow-hidden">
       {/* Preview */}
       <div className="relative aspect-[4/5] overflow-hidden bg-slate-900">
         {template.thumbnailUrl ? (
@@ -41,22 +47,19 @@ export default function TemplateCard({
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="truncate text-base font-bold">
+        <h3 className="truncate text-base font-bold text-white">
           {template.title}
         </h3>
 
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2 flex items-center justify-between gap-3">
           <p className="text-xs text-slate-500">
-            {template.layoutConfig.photoSlots} photo
-            {template.layoutConfig.photoSlots > 1
-              ? "s"
-              : ""}{" "}
-            supported
+            {photoSlots} photo
+            {photoSlots === 1 ? "" : "s"} supported
           </p>
 
           <Link
             href={`/dashboard/create?template=${template._id}`}
-            className="flex items-center gap-1 text-xs font-bold text-emerald-400 transition hover:text-emerald-300"
+            className="flex shrink-0 items-center gap-1 text-xs font-bold text-emerald-400 transition hover:text-emerald-300"
           >
             Use template
             <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />

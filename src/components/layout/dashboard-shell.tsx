@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 
 import { useAuth } from "@/hooks/use-auth";
+
 import ProtectedRoute from "@/components/auth/protected-route";
 import Navbar from "@/components/layout/navbar";
 import Sidebar from "@/components/layout/sidebar";

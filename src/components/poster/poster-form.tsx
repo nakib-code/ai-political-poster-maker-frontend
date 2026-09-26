@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 import Input from "@/components/ui/input";
 import Textarea from "@/components/ui/textarea";
@@ -45,8 +45,8 @@ export default function PosterForm({
     field: keyof typeof formData,
     value: string
   ) => {
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previous) => ({
+      ...previous,
       [field]: value,
     }));
   };
@@ -55,15 +55,18 @@ export default function PosterForm({
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-
     setError("");
 
-    if (
-      files.length >
+    const maxPhotos = Math.min(
+      3,
       template.layoutConfig.photoSlots
-    ) {
+    );
+
+    if (files.length > maxPhotos) {
       setError(
-        `This template supports maximum ${template.layoutConfig.photoSlots} photo(s).`
+        `This template supports a maximum of ${maxPhotos} photo${
+          maxPhotos === 1 ? "" : "s"
+        }.`
       );
       return;
     }
@@ -73,10 +76,8 @@ export default function PosterForm({
         {
           templateId: template._id,
           name: formData.name,
-          designation:
-            formData.designation || undefined,
-          organization:
-            formData.organization || undefined,
+          designation: formData.designation || undefined,
+          organization: formData.organization || undefined,
           union: formData.union || undefined,
           thana: formData.thana || undefined,
           district: formData.district || undefined,
@@ -94,15 +95,17 @@ export default function PosterForm({
     }
   };
 
+  const maxPhotos = Math.min(
+    3,
+    template.layoutConfig.photoSlots
+  );
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
-      {/* Personal information */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Personal Information */}
       <Card className="p-5 sm:p-6">
         <div className="mb-5">
-          <h2 className="text-lg font-bold">
+          <h2 className="text-lg font-bold text-white">
             Personal Information
           </h2>
 
@@ -129,10 +132,7 @@ export default function PosterForm({
             placeholder="e.g. Chairman"
             value={formData.designation}
             onChange={(event) =>
-              updateField(
-                "designation",
-                event.target.value
-              )
+              updateField("designation", event.target.value)
             }
           />
 
@@ -142,10 +142,7 @@ export default function PosterForm({
             placeholder="Enter organization"
             value={formData.organization}
             onChange={(event) =>
-              updateField(
-                "organization",
-                event.target.value
-              )
+              updateField("organization", event.target.value)
             }
           />
 
@@ -155,10 +152,7 @@ export default function PosterForm({
             placeholder="e.g. Victory Day"
             value={formData.occasion}
             onChange={(event) =>
-              updateField(
-                "occasion",
-                event.target.value
-              )
+              updateField("occasion", event.target.value)
             }
             required
           />
@@ -168,7 +162,7 @@ export default function PosterForm({
       {/* Location */}
       <Card className="p-5 sm:p-6">
         <div className="mb-5">
-          <h2 className="text-lg font-bold">
+          <h2 className="text-lg font-bold text-white">
             Location
           </h2>
 
@@ -204,19 +198,16 @@ export default function PosterForm({
             placeholder="District name"
             value={formData.district}
             onChange={(event) =>
-              updateField(
-                "district",
-                event.target.value
-              )
+              updateField("district", event.target.value)
             }
           />
         </div>
       </Card>
 
-      {/* Headline */}
+      {/* Poster Content */}
       <Card className="p-5 sm:p-6">
         <div className="mb-5">
-          <h2 className="text-lg font-bold">
+          <h2 className="text-lg font-bold text-white">
             Poster Content
           </h2>
 
@@ -231,10 +222,7 @@ export default function PosterForm({
           placeholder="Enter your poster headline"
           value={formData.headline}
           onChange={(event) =>
-            updateField(
-              "headline",
-              event.target.value
-            )
+            updateField("headline", event.target.value)
           }
           required
           maxLength={200}
@@ -243,11 +231,19 @@ export default function PosterForm({
 
       {/* Photos */}
       <Card className="p-5 sm:p-6">
+        <div className="mb-5">
+          <h2 className="text-lg font-bold text-white">
+            Poster Photos
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Upload up to {maxPhotos} photo
+            {maxPhotos === 1 ? "" : "s"} for this template.
+          </p>
+        </div>
+
         <ImageUploader
-          maxImages={Math.min(
-            3,
-            template.layoutConfig.photoSlots
-          )}
+          maxImages={maxPhotos}
           onChange={setFiles}
         />
       </Card>
@@ -265,15 +261,12 @@ export default function PosterForm({
           type="submit"
           size="lg"
           loading={loading}
+          disabled={loading}
           className="w-full sm:w-auto"
         >
-          {!loading && (
-            <Sparkles className="h-5 w-5" />
-          )}
+          {!loading && <Sparkles className="h-5 w-5" />}
 
-          {loading
-            ? "Generating poster..."
-            : "Generate Poster"}
+          {loading ? "Generating poster..." : "Generate Poster"}
         </Button>
       </div>
     </form>

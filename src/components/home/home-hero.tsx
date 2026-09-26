@@ -14,7 +14,7 @@ export default function HomeHero() {
 
       <div className="pointer-events-none absolute -right-40 top-40 h-80 w-80 rounded-full bg-cyan-500/5 blur-[100px]" />
 
-      <div className="page-container relative pb-20 pt-20 sm:pb-28 sm:pt-28 lg:pt-32">
+      <div className="relative pb-20 pt-20 sm:pb-28 sm:pt-28 lg:pt-32">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/15 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold text-emerald-400">
             <Sparkles className="h-3.5 w-3.5" />

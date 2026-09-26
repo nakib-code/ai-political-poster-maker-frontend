@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  LogOut,
-  Menu,
-  UserCircle,
-} from "lucide-react";
+import { LogOut, Menu, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface NavbarProps {
@@ -26,17 +22,17 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Mobile menu */}
+        {/* Mobile Menu */}
         <button
           type="button"
           onClick={onMenuClick}
           aria-label="Open menu"
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-white/5 hover:text-white lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-white/5 hover:text-white lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Desktop workspace label */}
+        {/* Desktop Workspace */}
         <div className="hidden lg:block">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
             Workspace
@@ -47,7 +43,7 @@ export default function Navbar({
           </p>
         </div>
 
-        {/* Right side */}
+        {/* Right Side */}
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           {/* User */}
           <div className="flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.03] px-2.5 py-1.5 sm:px-3">
@@ -72,7 +68,7 @@ export default function Navbar({
             onClick={handleLogout}
             aria-label="Logout"
             title="Logout"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 text-slate-500 transition hover:border-red-500/10 hover:bg-red-500/10 hover:text-red-400"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 text-slate-500 transition-colors hover:border-red-500/10 hover:bg-red-500/10 hover:text-red-400"
           >
             <LogOut className="h-[18px] w-[18px]" />
           </button>

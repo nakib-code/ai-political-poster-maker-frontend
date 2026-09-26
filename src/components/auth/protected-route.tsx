@@ -22,26 +22,22 @@ export default function ProtectedRoute({
     isError,
   } = useAuth();
 
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
+  const isAuthenticated = Boolean(token && !isError && user);
+
   useEffect(() => {
     if (isLoading) return;
 
-    const token =
-      localStorage.getItem("accessToken");
-
-    if (!token || isError || !user) {
+    if (!isAuthenticated) {
       router.replace(
-        `/login?redirect=${encodeURIComponent(
-          pathname
-        )}`
+        `/login?redirect=${encodeURIComponent(pathname)}`
       );
     }
-  }, [
-    isLoading,
-    isError,
-    user,
-    router,
-    pathname,
-  ]);
+  }, [isLoading, isAuthenticated, router, pathname]);
 
   if (isLoading) {
     return (
@@ -57,12 +53,7 @@ export default function ProtectedRoute({
     );
   }
 
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("accessToken")
-      : null;
-
-  if (!token || isError || !user) {
+  if (!isAuthenticated) {
     return null;
   }
 
